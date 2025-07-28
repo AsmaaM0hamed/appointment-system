@@ -1,0 +1,35 @@
+extend type Query {
+    users: [User!]!
+        @paginate(
+        builder: "App\\Graphql\\Queries\\UserQuery@getUsers"
+        defaultCount: 10
+    )
+
+    get_user(id: ID! @eq): User
+    @find(model: "App\\Models\\User")
+
+} 
+
+type Mutation {
+   update_or_create_user(input: ExtraUserInput): User
+    @field(resolver: "UserMutator@update")
+   
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: String!
+    email_verified_at: DateTime
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input ExtraUserInput {
+    id: ID
+    name: String!
+    email: String!
+    password: String!
+    role: String = "client"
+}
